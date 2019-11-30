@@ -1,5 +1,8 @@
+window.onload = function () {
+    fetchFromCloud();
+};
 var i = -1;
-var notes = {};
+var notes = [];
 
 function increseI() {
     i += 1;
@@ -112,6 +115,7 @@ function deleteNote(id){
 }
 
 function downloadNote(id){
+    fetchFromCloud();
     var filename = 'note.txt'
     var text = document.getElementById('input_' + id).value;
     var downElement = document.createElement('a');
@@ -121,4 +125,48 @@ function downloadNote(id){
     document.body.appendChild(downElement);
     downElement.click();
     document.body.removeChild(downElement);
+}
+
+function saveToCloud(){
+    var notesList = [];
+    notes.forEach(element => notesList.push(element.note));
+    console.log(notesList);
+    var url = "https://5e3qvi2p34.execute-api.us-east-1.amazonaws.com/dev/update";
+    var data = {"notes": notesList}
+    var jdata = JSON.stringify(data);
+    console.log('data', jdata);
+
+    var xhr = new XMLHttpRequest();
+    // xhr.withCredentials = true;
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            response = JSON.parse(this.responseText);
+            console.log(response);
+        }
+    }
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(jdata);
+}
+
+function fetchFromCloud() {
+    var url = "https://5e3qvi2p34.execute-api.us-east-1.amazonaws.com/dev/get";
+
+    var xhr = new XMLHttpRequest();
+    // xhr.withCredentials = true;
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            response = JSON.parse(this.responseText);
+            console.log("Response : ", response["notesList"]);
+            response["notesList"].forEach(note => {
+                addNote();
+                document.getElementById("input_" + i).value = note;
+            });
+        }
+    }
+    xhr.open("GET", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send();
 }

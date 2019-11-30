@@ -1,0 +1,59 @@
+# serverless deploy --aws-profile tanmay
+service: my-notes
+
+frameworkVersion: ">=1.1.0 <2.0.0"
+
+provider:
+  name: aws
+  runtime: python3.8
+  stage: dev
+  region: us-east-1
+  profile: tanmay
+  environment:
+    DYNAMODB_TABLE_NOTES: 'notes'
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      # Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+      Resource: "*"
+
+    - Effect: Allow
+      Action:
+        - s3:*
+      Resource: "*"
+
+functions:
+  updateNotes:
+    handler: notes.update
+    events:
+      - http:
+          path: update
+          method: post
+          cors: true
+
+  getNotes:
+    handler: notes.get
+    events:
+      - http:
+          path: get
+          method: get
+          cors: true
+  
+resources:
+  Resources:
+
+    NotesDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.DYNAMODB_TABLE_NOTES}
