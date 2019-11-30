@@ -163,6 +163,7 @@ function fetchFromCloud() {
             response["notesList"].forEach(note => {
                 addNote();
                 document.getElementById("input_" + i).value = note;
+                saveNote(i);
             });
         }
     }
