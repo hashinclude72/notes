@@ -115,7 +115,6 @@ function deleteNote(id){
 }
 
 function downloadNote(id){
-    fetchFromCloud();
     var filename = 'note.txt'
     var text = document.getElementById('input_' + id).value;
     var downElement = document.createElement('a');
