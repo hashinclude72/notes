@@ -142,6 +142,7 @@ function saveToCloud(){
         if (xhr.readyState == XMLHttpRequest.DONE) {
             response = JSON.parse(this.responseText);
             console.log(response);
+            alert("Saved");
         }
     }
     xhr.open("POST", url, true);
