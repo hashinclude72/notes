@@ -31,9 +31,9 @@
 <body>
     <div>
         <div class='nav'>
-            <h3>Notes</h3>
+            <h3 class='headText'>Notes</h3>
         </div>
-        <div>
+        <div class='tip'>
             <small>* Notes are not autosaved you can save them by clicking "Save to Cloud" button.<br>
                 * You can also download the NOTE into a text file.<br>
                 <br>
@@ -42,11 +42,14 @@
         <div class='mid'>
             <div>
                 <!-- <p>Notes</p> -->
-                <button class='btn btnclr' style="margin:10px;" onclick="addNote()">Add Note
+                <button class='btn btnclr1' style="margin:10px;" onclick="addNote()">Add Note
 
                 </button>
-                <button class='btn btnclr' style="margin:10px;" onclick="saveToCloud()">Save to cloud
-                
+                <button id='saveBtn' class='btn btnclr1' style="margin:10px;" onclick="saveToCloud()">Save
+
+                </button>
+                <button id='saveBtn' class='btn btnclr1' style="margin:10px;" onclick="downloadAll()">Download All
+
                 </button>
             </div>
             <br><br>
@@ -56,7 +59,11 @@
 
         </div>
         <div class="" id='footer' style="text-align:center;border-top:2px solid #196f1a;border-bottom:0px">
-            <small>© Copyright 2019 Hackapeeps | All Rights Reserved |</small>
+            <small>
+                <a target="_blank" href="http://hashinclude72.github.io">Hackapeeps</a>
+                |
+                <a href="#" onclick="privacy(); return false;">Privacy Policy</a>
+            </small>
 
         </div>
     </div>

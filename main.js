@@ -83,11 +83,12 @@ function addNote() {
     inr_div.setAttribute("id", "id_" + i);
     // out_div.setAttribute("class", "input-group mb-3 input-group-sm");
     // inr_div.setAttribute("class", "input-group-append");
+    inr_div.setAttribute("class", "marginBottom");
     inr_div.appendChild(adr);
     inr2_div.appendChild(bttn2);
     inr2_div.appendChild(bttn);
-    
-    
+
+
     // out_div.appendChild(mt);
     // out_div.appendChild(wt);
     // out_div.appendChild(val);
@@ -97,24 +98,24 @@ function addNote() {
     document.getElementById('note').appendChild(inr_div);
 }
 
-function saveNote(id){
+function saveNote(id) {
     var note_content = document.getElementById('input_' + id).value;
     var note = {
         id: id,
-        note:note_content,
+        note: note_content,
     }
     notes[id] = note;
     console.log("Notes", notes);
 }
 
-function deleteNote(id){
+function deleteNote(id) {
     var child = document.getElementById('id_' + id);
     document.getElementById('note').removeChild(child);
     delete notes[id];
-    console.log("Notes",notes);
+    console.log("Notes", notes);
 }
 
-function downloadNote(id){
+function downloadNote(id) {
     var filename = 'note.txt'
     var text = document.getElementById('input_' + id).value;
     var downElement = document.createElement('a');
@@ -126,12 +127,28 @@ function downloadNote(id){
     document.body.removeChild(downElement);
 }
 
-function saveToCloud(){
+function downloadAll() {
+    var filename = 'notes.txt'
+    var notesList = [];
+    notes.forEach(element => notesList.push(element.note));
+    // console.log(notesList);
+    // var text = document.getElementById('input_' + id).value;
+    var text = `{"notes": [${notesList}] }`
+    var downElement = document.createElement('a');
+    downElement.setAttribute('href', 'data:text/plain;chaset=utf-8,' + encodeURIComponent(text));
+    downElement.setAttribute('download', filename);
+    downElement.style.display = 'none';
+    document.body.appendChild(downElement);
+    downElement.click();
+    document.body.removeChild(downElement);
+}
+
+function saveToCloud() {
     var notesList = [];
     notes.forEach(element => notesList.push(element.note));
     console.log(notesList);
     var url = "https://5e3qvi2p34.execute-api.us-east-1.amazonaws.com/dev/update";
-    var data = {"notes": notesList}
+    var data = { "notes": notesList }
     var jdata = JSON.stringify(data);
     console.log('data', jdata);
 
@@ -142,7 +159,9 @@ function saveToCloud(){
         if (xhr.readyState == XMLHttpRequest.DONE) {
             response = JSON.parse(this.responseText);
             console.log(response);
-            alert("Saved");
+            document.getElementById('saveBtn').innerHTML = 'Saved';
+            document.getElementById("saveBtn").className = 'btn btnclr';
+            // alert("Saved");
         }
     }
     xhr.open("POST", url, true);
@@ -170,4 +189,8 @@ function fetchFromCloud() {
     xhr.open("GET", url, true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send();
+}
+
+function privacy() {
+    alert("privacy is a relic of the past");
 }
